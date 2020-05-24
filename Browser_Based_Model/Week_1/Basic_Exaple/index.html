@@ -11,7 +11,7 @@
         async function doTraining(model){
             const history = 
                   await model.fit(xs, ys,
-                                 { epochs: 500,
+                                 { epochs: 200,
                                    callbacks:{
                                        onEpochEnd: async(epoch, logs) =>{
                                            console.log("Epoch: "+epoch + "Loss:" + logs.loss);
@@ -36,8 +36,21 @@
             And it is done because training takes indefinite time
        */
         
+        let value;
+        let element_c;
+        let text;
         doTraining(model).then(() => {
-           alert(model.predict(tf.tensor2d([10],[1,1]))); 
+            value = model.predict(tf.tensor2d([10],[1,1])); 
+            alert("Value: "+String(value));
+            
+            element_c = document.createElement('p');
+            
+            text = document.createTextNode("Value: "+String(value));
+            element_c.appendChild(text);
+            
+            let div_node = document.getElementById('val');
+            div_node.appendChild(element_c);
+            
         });
         
     </script>
@@ -45,6 +58,9 @@
     <body>
         
         <h1>First HTML Page</h1>
+        <div id="val">
+        
+        </div>
         
     </body>
     
