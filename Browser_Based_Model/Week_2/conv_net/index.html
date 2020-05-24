@@ -1,0 +1,84 @@
+<!doctype html>
+
+<html>
+    <head>
+        <title>Tensorflow JS</title>
+    </head>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs/dist/tf.min.js"> </script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-vis"></script>
+    
+<!--    For vizualizing library  tfs-vis-->
+
+    
+    <script lang="js">
+        model = tf.sequential();
+        
+        model.add(tf.layers.conv2d({inputShape: [28,28,1],
+                                   kernelSize: 3, filters: 8, activation: 'relu'}));
+        
+        model.add(tf.layers.maxPooling2d({poolSize: [2,2]}));
+        
+        model.add(tf.layers.conv2d({filters:16, kernelSize:3, activation:                               'relu'}));
+        
+        model.add(tf.layers.maxPooling2d({poolSize: [2,2]}));
+        
+        model.add(tf.layers.flatten());
+        
+        model.add(tf.layers.dense({units: 128, activation: 'relu'}));
+        
+        model.add(tf.layers.dense({units:10, activation: 'softmax'}));
+        
+        model.compile({
+            optimizer: tf.train.adam(),
+            loss: 'categoricalCrossentropy',
+            metrics: ['accuracy']
+        });
+        
+        model.summary();
+        
+        const TRAIN_DATA_SIZE = 5500;
+        const data = new MnistData();
+        await data.load();
+        
+        // tf.tidy() is used to save memory
+        const [trainXs, trainYs] = tf.tidy(() => {
+           cont d = data.nextTrainBatch(TRAIN_DATA_SIZE);
+            
+            return [
+              d.xs.reshape([TRAIN_DATA_SIZE, 28, 28, 1]),
+                d.labels
+            ];
+        });
+        
+        
+        /*
+        const metrics = ['loss', 'val_loss','acc', 'val_acc'];
+        const container = {name: 'Model Training', styles: { height: '1000px'} };
+        */
+        
+//      const fitCallbacks = tfvis.show.fitCallbacks(container,metrics);
+        
+//      container is where tf-vis will render the feedback and a set of            metrics that it should track
+        
+//        model.fit(trainXs,trainYs,{
+//           batchsize: BATCH_SIZE,
+//            validationData: [testXs, testYs],
+//            epochs: 20,
+//            shuffle: true,
+//            callbacks: fitCallbacks
+//        });
+        
+        
+        
+    </script>
+    
+    <body>
+        
+        <h1>Conv Net Code</h1>
+        
+    </body>
+    
+    
+</html>
